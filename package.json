@@ -1,0 +1,14 @@
+{
+  "name": "wc-cdc-tool",
+  "version": "1.0.0",
+  "description": "Washington County CDC Code Language Outline Tool",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "multer": "^1.4.5-lts.1",
+    "crypto": "^1.0.1"
+  }
+}

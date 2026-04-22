@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Washington County — CDC Code Language Outline</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Serif 4',Georgia,serif;background:#F7F6F3;color:#27261F;padding:20px 16px}
+.wrap{max-width:820px;margin:0 auto}
+h1{font-size:21px;color:#1B4D6E;margin:4px 0 0}
+.sub{font-size:11px;font-family:'IBM Plex Mono',monospace;color:#1B4D6E;letter-spacing:0.1em;text-transform:uppercase}
+.card{background:#fff;border:1px solid #D2CFCA;border-radius:8px;padding:20px;margin-bottom:14px}
+label{display:block;font-size:12px;font-family:'IBM Plex Mono',monospace;color:#6D6A62;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em}
+select{width:100%;padding:10px 12px;font-size:14px;border:1px solid #D2CFCA;border-radius:5px;font-family:inherit;outline:none;background:#fff}
+.btn{padding:12px 24px;font-size:15px;font-weight:700;font-family:inherit;border:none;border-radius:7px;cursor:pointer;width:100%}
+.btn-primary{background:#1B4D6E;color:#fff}
+.btn-primary:hover{background:#164060}
+.btn-primary:disabled{background:#E5E3DE;color:#A09C94;cursor:not-allowed}
+.btn-sm{padding:9px 18px;font-size:13px;font-weight:600;width:auto}
+.btn-outline{background:#fff;border:1px solid #D2CFCA;color:#27261F}
+.btn-outline:hover{background:#F7F6F3}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mono{font-family:'IBM Plex Mono',monospace}
+.badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500;margin:0 4px 4px 0}
+.badge-blue{background:#EAF1F7;color:#1B4D6E}
+.badge-teal{background:#EBF7F0;color:#1E6B45}
+.badge-amber{background:#FEF9E7;color:#7D6608}
+.section-card{background:#fff;border:1px solid #D2CFCA;border-radius:8px;margin-bottom:10px;overflow:hidden}
+.section-header{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#F4F3EF;border:none;cursor:pointer;text-align:left;font-family:inherit}
+.section-header h3{font-size:14px;font-weight:700;color:#1B4D6E;margin:0}
+.section-body{padding:16px;font-size:12.5px;line-height:1.8;font-family:'IBM Plex Mono',monospace;white-space:pre-wrap;word-break:break-word;background:#FDFCF8;max-height:600px;overflow-y:auto;border-top:1px solid #E5E3DE}
+.source-box{background:#F4F3EF;border:1px solid #E5E3DE;border-radius:7px;padding:14px;margin-bottom:14px}
+.source-doc{font-size:12px;font-family:'IBM Plex Mono',monospace;color:#6D6A62;padding:3px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px}
+.source-doc .name{color:#27261F}
+.disclaimer{background:#F4F3EF;border:1px solid #E5E3DE;border-radius:6px;padding:12px;margin-top:14px;font-size:11px;color:#A09C94;line-height:1.6;font-family:'IBM Plex Mono',monospace}
+.spinner{display:inline-block;width:22px;height:22px;border:2px solid #E5E3DE;border-top-color:#1B4D6E;border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+@media print{body{background:#fff;padding:10px}.btn,.btn-sm,.btn-outline{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom:24px;border-bottom:2px solid #1B4D6E;padding-bottom:14px">
+    <div class="sub">Washington County, Oregon</div>
+    <h1>Community Development Code<br>Requirements Outline</h1>
+    <p style="margin:6px 0 0;font-size:12px;color:#6D6A62;font-family:'IBM Plex Mono',monospace">CDC · RDCS · TSP — Full Code Language</p>
+  </div>
+
+  <!-- ═══ INPUT PANEL ═══ -->
+  <div id="input-panel">
+    <div class="card">
+      <div class="grid2" style="margin-bottom:14px">
+        <div>
+          <label>Proposed Use</label>
+          <select id="sel-use">
+            <option value="">— select a use —</option>
+            <optgroup label="Residential">
+              <option value="sfr">Single-family detached residential</option>
+              <option value="mfr">Multi-family residential</option>
+              <option value="adu">Accessory dwelling unit (ADU)</option>
+              <option value="manufactured">Manufactured dwelling</option>
+            </optgroup>
+            <optgroup label="Middle Housing (HB 2001)">
+              <option value="duplex">Duplex</option>
+              <option value="triplex">Triplex</option>
+              <option value="fourplex">Fourplex</option>
+              <option value="townhouse">Townhouse</option>
+              <option value="cottage-cluster">Cottage cluster</option>
+            </optgroup>
+            <optgroup label="Commercial — Retail / Food">
+              <option value="retail">Retail / general commercial</option>
+              <option value="restaurant">Restaurant / food service</option>
+              <option value="drive-through">Drive-through facility</option>
+              <option value="shopping-center">Shopping center</option>
+            </optgroup>
+            <optgroup label="Commercial — Office / Service">
+              <option value="office">Office / professional services</option>
+              <option value="medical">Medical / dental clinic</option>
+              <option value="gas">Gas station / fuel sales</option>
+              <option value="hotel">Hotel / motel</option>
+              <option value="auto-repair">Auto repair / body shop</option>
+              <option value="self-storage">Self-storage facility</option>
+            </optgroup>
+            <optgroup label="Industrial">
+              <option value="light-industrial">Light industrial / manufacturing</option>
+              <option value="warehouse">Warehouse / distribution</option>
+              <option value="heavy-industrial">Heavy industrial</option>
+            </optgroup>
+            <optgroup label="Institutional">
+              <option value="church">Religious institution</option>
+              <option value="school">School (K-12)</option>
+              <option value="childcare">Child care center</option>
+              <option value="hospital">Hospital / medical center</option>
+              <option value="college">College / university</option>
+            </optgroup>
+            <optgroup label="Agricultural / Infrastructure">
+              <option value="farm">Farm / agriculture</option>
+              <option value="cell-tower">Cell tower / wireless facility</option>
+              <option value="solar-facility">Solar energy facility</option>
+            </optgroup>
+          </select>
+        </div>
+        <div>
+          <label>Land Use District</label>
+          <select id="sel-district">
+            <option value="">— select a district —</option>
+            <optgroup label="Residential">
+              <option value="R-5">R-5 (5 units/acre)</option>
+              <option value="R-6">R-6 (6 units/acre)</option>
+              <option value="R-9">R-9 (9 units/acre)</option>
+              <option value="R-15">R-15 (15 units/acre)</option>
+              <option value="R-24">R-24 (24 units/acre)</option>
+              <option value="R-25+">R-25+ (25+ units/acre)</option>
+            </optgroup>
+            <optgroup label="Commercial">
+              <option value="NC">NC (Neighborhood commercial)</option>
+              <option value="OC">OC (Office commercial)</option>
+              <option value="CBD">CBD (Community business)</option>
+              <option value="GC">GC (General commercial)</option>
+            </optgroup>
+            <optgroup label="Industrial / Institutional">
+              <option value="IND">IND (Industrial)</option>
+              <option value="INST">INST (Institutional)</option>
+            </optgroup>
+            <optgroup label="Special / Overlay">
+              <option value="TO:R9-12">TO:R9-12 (Transit oriented)</option>
+              <option value="EFU">EFU (Exclusive farm use)</option>
+              <option value="AF-5">AF-5 (Ag/forest — 5 acre)</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <label>Road Classification (frontage / access road)</label>
+      <select id="sel-road">
+        <option value="">— select road classification —</option>
+        <optgroup label="State / Regional">
+          <option value="stateHwy">State highway (ODOT)</option>
+          <option value="arterialMajor">Major arterial</option>
+          <option value="arterialMinor">Minor arterial</option>
+        </optgroup>
+        <optgroup label="County Roads">
+          <option value="collector">Collector road</option>
+          <option value="neighborhood">Neighborhood route</option>
+          <option value="local">Local street</option>
+          <option value="private">Private road / easement</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div id="doc-match" class="hidden" style="background:#EAF1F7;border:1px solid #B4CEDE;border-radius:7px;padding:12px;margin-bottom:14px;font-size:12px;font-family:'IBM Plex Mono',monospace"></div>
+
+    <button class="btn btn-primary" id="btn-generate" onclick="generate()" disabled>Extract Applicable Code Language →</button>
+    <p style="font-size:11px;color:#A09C94;margin-top:8px;text-align:center;font-family:'IBM Plex Mono',monospace">
+      Reads from administrator-uploaded source documents. Processing takes 30–90 seconds.
+    </p>
+  </div>
+
+  <!-- ═══ LOADING ═══ -->
+  <div id="loading-panel" class="hidden" style="text-align:center;padding:40px">
+    <div class="spinner"></div>
+    <div id="loading-msg" style="margin-top:12px;font-size:13px;color:#6D6A62"></div>
+  </div>
+
+  <!-- ═══ RESULTS ═══ -->
+  <div id="results-panel" class="hidden">
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px" id="results-badges"></div>
+
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="btn btn-sm btn-primary" onclick="copyAll()">Copy Full Outline</button>
+      <button class="btn btn-sm btn-outline" onclick="window.print()">Print / PDF</button>
+      <button class="btn btn-sm btn-outline" onclick="resetTool()">New Query</button>
+    </div>
+
+    <div id="source-docs"></div>
+    <div id="results-body"></div>
+
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> Code language was extracted from administrator-uploaded documents. Verify against the currently adopted Washington County CDC, RDCS, and TSP. Code amendments may have occurred after the source documents were uploaded.
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── State ──────────────────────────────────────────────────
+
+let allDocs = [];
+let lastUsedDocs = [];
+let lastResultText = "";
+
+const USE_TYPES = {
+  sfr:"residential",mfr:"residential",adu:"residential",manufactured:"residential",
+  duplex:"middle-housing",triplex:"middle-housing",fourplex:"middle-housing",
+  townhouse:"middle-housing","cottage-cluster":"middle-housing",
+  retail:"commercial",restaurant:"commercial","drive-through":"commercial",
+  "shopping-center":"commercial",office:"commercial",medical:"commercial",
+  gas:"commercial",hotel:"commercial","auto-repair":"commercial","self-storage":"commercial",
+  "light-industrial":"industrial",warehouse:"industrial","heavy-industrial":"industrial",
+  church:"institutional",school:"institutional",childcare:"institutional",
+  hospital:"institutional",college:"institutional",
+  farm:"agricultural","cell-tower":"infrastructure","solar-facility":"infrastructure"
+};
+
+function getRelevantTags(use, district, road) {
+  const ut = USE_TYPES[use] || "commercial";
+  const tags = ["district","parking","landscape","transport","setbacks","rdcs"];
+  if (["middle-housing","commercial","industrial","institutional","infrastructure"].includes(ut)) tags.push("use-standards");
+  if (use === "adu" || use === "drive-through") tags.push("use-standards");
+  return tags;
+}
+
+// ─── Load docs on page load ─────────────────────────────────
+
+async function init() {
+  try {
+    const res = await fetch("/api/documents");
+    allDocs = await res.json();
+  } catch { allDocs = []; }
+  updateMatchPreview();
+}
+
+function updateMatchPreview() {
+  const use = document.getElementById("sel-use").value;
+  const district = document.getElementById("sel-district").value;
+  const road = document.getElementById("sel-road").value;
+  const btn = document.getElementById("btn-generate");
+  const matchEl = document.getElementById("doc-match");
+
+  if (use && district && road) {
+    btn.disabled = false;
+    const tags = getRelevantTags(use, district, road);
+    const tagSet = new Set(tags);
+    const matched = allDocs.filter(d => d.tags.some(t => tagSet.has(t)));
+    matchEl.classList.remove("hidden");
+    if (matched.length > 0) {
+      matchEl.innerHTML = `<strong>${matched.length}</strong> source document(s) available for this scenario.`;
+      matchEl.style.background = "#EAF1F7";
+      matchEl.style.borderColor = "#B4CEDE";
+    } else {
+      matchEl.innerHTML = `<strong>0</strong> source documents match. An administrator needs to upload the applicable CDC sections.`;
+      matchEl.style.background = "#FDF0F0";
+      matchEl.style.borderColor = "#F0B8B8";
+    }
+  } else {
+    btn.disabled = true;
+    matchEl.classList.add("hidden");
+  }
+}
+
+document.getElementById("sel-use").onchange = updateMatchPreview;
+document.getElementById("sel-district").onchange = updateMatchPreview;
+document.getElementById("sel-road").onchange = updateMatchPreview;
+
+// ─── Generate ───────────────────────────────────────────────
+
+async function generate() {
+  const use = document.getElementById("sel-use").value;
+  const district = document.getElementById("sel-district").value;
+  const road = document.getElementById("sel-road").value;
+  const useLbl = document.getElementById("sel-use").options[document.getElementById("sel-use").selectedIndex].text;
+  const roadLbl = document.getElementById("sel-road").options[document.getElementById("sel-road").selectedIndex].text;
+
+  document.getElementById("input-panel").classList.add("hidden");
+  document.getElementById("loading-panel").classList.remove("hidden");
+  document.getElementById("loading-msg").textContent = "Extracting applicable code language from source documents…";
+
+  try {
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        use, useLbl, district, road, roadLbl,
+        relevantTags: getRelevantTags(use, district, road)
+      })
+    });
+
+    const data = await res.json();
+    if (data.error) {
+      showError(data.error);
+      return;
+    }
+
+    lastUsedDocs = data.usedDocs || [];
+    lastResultText = data.text || "";
+
+    // Render results
+    document.getElementById("results-badges").innerHTML = `
+      <span class="badge badge-blue">${esc(useLbl)}</span>
+      <span class="badge badge-teal">${esc(district)}</span>
+      <span class="badge badge-amber">${esc(roadLbl)}</span>
+    `;
+
+    // Source documents
+    if (lastUsedDocs.length > 0) {
+      document.getElementById("source-docs").innerHTML = `
+        <div class="source-box">
+          <div class="mono" style="font-size:11px;color:#1B4D6E;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Source Documents</div>
+          ${lastUsedDocs.map(d => `<div class="source-doc"><span class="name">${esc(d.name)}</span><span>Uploaded ${new Date(d.uploaded).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}</span></div>`).join("")}
+          <div style="font-size:11px;color:#A09C94;margin-top:8px;font-family:'IBM Plex Mono',monospace">Code language is only as current as the uploaded documents.</div>
+        </div>
+      `;
+    }
+
+    // Split response into sections
+    const parts = lastResultText.split(/═{3,}/);
+    const sections = parts.map(p => p.trim()).filter(p => p.length > 20);
+
+    if (sections.length > 0) {
+      document.getElementById("results-body").innerHTML = sections.map((s, i) => {
+        const firstLine = s.split("\n")[0].replace(/^\d+\.\s*/, "").trim();
+        return `<div class="section-card">
+          <button class="section-header" onclick="this.nextElementSibling.classList.toggle('hidden')">
+            <h3>${esc(firstLine)}</h3><span style="font-size:16px;color:#A09C94">▾</span>
+          </button>
+          <div class="section-body">${esc(s)}</div>
+        </div>`;
+      }).join("");
+    } else {
+      document.getElementById("results-body").innerHTML = `
+        <div class="section-card">
+          <div class="section-body">${esc(lastResultText)}</div>
+        </div>`;
+    }
+
+    document.getElementById("loading-panel").classList.add("hidden");
+    document.getElementById("results-panel").classList.remove("hidden");
+
+  } catch(e) {
+    showError("Network error: " + e.message);
+  }
+}
+
+function showError(msg) {
+  document.getElementById("loading-panel").classList.add("hidden");
+  document.getElementById("results-panel").classList.remove("hidden");
+  document.getElementById("source-docs").innerHTML = "";
+  document.getElementById("results-body").innerHTML = `<div class="card" style="background:#FDF0F0;border-color:#F0B8B8;color:#8B2020">${esc(msg)}</div>`;
+}
+
+function resetTool() {
+  document.getElementById("results-panel").classList.add("hidden");
+  document.getElementById("input-panel").classList.remove("hidden");
+  document.getElementById("results-body").innerHTML = "";
+  document.getElementById("source-docs").innerHTML = "";
+}
+
+function copyAll() {
+  const use = document.getElementById("sel-use").options[document.getElementById("sel-use").selectedIndex].text;
+  const district = document.getElementById("sel-district").value;
+  const road = document.getElementById("sel-road").options[document.getElementById("sel-road").selectedIndex].text;
+
+  let t = `WASHINGTON COUNTY CDC — CODE LANGUAGE OUTLINE\n${"=".repeat(55)}\n`;
+  t += `Use: ${use}\nDistrict: ${district}\nRoad: ${road}\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
+
+  if (lastUsedDocs.length > 0) {
+    t += `SOURCE DOCUMENTS\n${"-".repeat(55)}\n`;
+    lastUsedDocs.forEach(d => {
+      t += `  ${d.name}  —  Uploaded ${new Date(d.uploaded).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}\n`;
+    });
+    t += `\nCode language is only as current as the uploaded documents.\n\n`;
+  }
+
+  t += lastResultText;
+  t += `\n\n${"=".repeat(55)}\nSource: Washington County, OR — washingtoncountyor.gov\nVerify against current adopted CDC, RDCS, and TSP.\n`;
+
+  navigator.clipboard.writeText(t).then(() => alert("Copied."));
+}
+
+function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Washington County CDC Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Serif 4',Georgia,serif;background:#F7F6F3;color:#27261F;padding:20px 16px}
+.wrap{max-width:780px;margin:0 auto}
+h1{font-size:20px;color:#1B4D6E;margin:4px 0 0}
+.sub{font-size:11px;font-family:'IBM Plex Mono',monospace;color:#1B4D6E;letter-spacing:0.1em;text-transform:uppercase}
+.card{background:#fff;border:1px solid #D2CFCA;border-radius:8px;padding:20px;margin-bottom:14px}
+label{display:block;font-size:12px;font-family:'IBM Plex Mono',monospace;color:#6D6A62;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.06em}
+input,select{width:100%;padding:10px 12px;font-size:14px;border:1px solid #D2CFCA;border-radius:5px;font-family:inherit;outline:none}
+.btn{padding:10px 20px;font-size:14px;font-weight:600;font-family:inherit;border:none;border-radius:6px;cursor:pointer}
+.btn-primary{background:#1B4D6E;color:#fff}
+.btn-primary:hover{background:#164060}
+.btn-sm{padding:5px 12px;font-size:12px;font-family:'IBM Plex Mono',monospace}
+.btn-danger{background:transparent;border:1px solid #E5E3DE;color:#A09C94}
+.btn-danger:hover{border-color:#8B2020;color:#8B2020}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:3px;font-family:'IBM Plex Mono',monospace;cursor:pointer;margin:2px}
+.tag-on{background:#EAF1F7;border:1px solid #B4CEDE;color:#1B4D6E;font-weight:500}
+.tag-off{background:transparent;border:1px solid #E5E3DE;color:#A09C94}
+.drop{border:2px dashed #D2CFCA;border-radius:8px;padding:28px 20px;text-align:center;background:#fff;margin-bottom:16px;transition:border-color 0.2s}
+.drop.over{border-color:#1B4D6E}
+.mono{font-family:'IBM Plex Mono',monospace}
+.meta{font-size:11px;color:#A09C94;margin-top:3px}
+.msg{padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:14px}
+.msg-ok{background:#EBF7F0;border:1px solid #B5E6CC;color:#1E6B45}
+.msg-err{background:#FDF0F0;border:1px solid #F0B8B8;color:#8B2020}
+.doc-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom:20px;border-bottom:2px solid #1B4D6E;padding-bottom:12px">
+    <div class="sub">Washington County, Oregon — Administrator</div>
+    <h1>CDC Source Document Management</h1>
+  </div>
+
+  <!-- Login -->
+  <div id="login-panel" class="card">
+    <label>Admin Password</label>
+    <div style="display:flex;gap:10px">
+      <input type="password" id="pw-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="btn btn-primary" onclick="doLogin()">Log In</button>
+    </div>
+    <div id="login-msg"></div>
+  </div>
+
+  <!-- Admin content (hidden until login) -->
+  <div id="admin-content" class="hidden">
+
+    <!-- Upload -->
+    <div class="drop" id="drop-zone" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="event.preventDefault();this.classList.remove('over');handleFiles(event.dataTransfer.files)">
+      <div style="font-size:15px;font-weight:600;margin-bottom:6px">Drop CDC, RDCS, or TSP files here</div>
+      <div style="font-size:12px;color:#6D6A62;margin-bottom:12px">PDF or image files — max 20 MB each</div>
+      <label class="btn btn-primary" style="display:inline-block">
+        Choose Files
+        <input type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.gif,.webp" onchange="handleFiles(this.files)" style="display:none">
+      </label>
+    </div>
+
+    <div style="background:#FEF9E7;border:1px solid #F0E6A0;border-radius:7px;padding:14px;margin-bottom:16px;font-size:13px;line-height:1.6">
+      <strong>Please upload the most current and up-to-date version of Washington County's Community Development Code, Road Design and Construction Standards, and TSP.</strong>
+      <div style="margin-top:8px;font-size:12px;color:#6D6A62">
+        Tag each document after uploading so the tool knows which sections it covers. The public tool will only be as current as the documents here.
+      </div>
+    </div>
+
+    <div id="upload-msg"></div>
+
+    <!-- Document list -->
+    <div id="doc-list"></div>
+  </div>
+</div>
+
+<script>
+const TAG_LIST = [
+  {id:"district",label:"District Standards (§301–§375)"},
+  {id:"use-standards",label:"Special Use Standards (§430)"},
+  {id:"setbacks",label:"Setbacks (§418)"},
+  {id:"parking",label:"Parking & Loading (§413)"},
+  {id:"landscape",label:"Landscaping (§407–§411)"},
+  {id:"transport",label:"Transportation (§501)"},
+  {id:"sensitive",label:"Sensitive Lands (§422)"},
+  {id:"signs",label:"Signs (§414)"},
+  {id:"procedures",label:"Procedures (Article II)"},
+  {id:"rdcs",label:"Road Design Standards (RDCS)"},
+  {id:"tsp",label:"Transportation System Plan"},
+  {id:"comp-plan",label:"Comprehensive Plan"},
+  {id:"other",label:"Other"}
+];
+
+let token = localStorage.getItem("wc_admin_token") || "";
+
+// Check existing session
+if (token) { loadDocs(); }
+
+async function doLogin() {
+  const pw = document.getElementById("pw-input").value;
+  try {
+    const res = await fetch("/api/admin/login", {
+      method: "POST", headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({password: pw})
+    });
+    const data = await res.json();
+    if (data.token) {
+      token = data.token;
+      localStorage.setItem("wc_admin_token", token);
+      document.getElementById("login-panel").classList.add("hidden");
+      document.getElementById("admin-content").classList.remove("hidden");
+      loadDocs();
+    } else {
+      document.getElementById("login-msg").innerHTML = '<div class="msg msg-err" style="margin-top:10px">Invalid password.</div>';
+    }
+  } catch(e) {
+    document.getElementById("login-msg").innerHTML = '<div class="msg msg-err" style="margin-top:10px">Connection error.</div>';
+  }
+}
+
+async function loadDocs() {
+  document.getElementById("login-panel").classList.add("hidden");
+  document.getElementById("admin-content").classList.remove("hidden");
+  try {
+    const res = await fetch("/api/admin/documents", {headers:{"x-admin-token":token}});
+    if (res.status === 401) { localStorage.removeItem("wc_admin_token"); location.reload(); return; }
+    const docs = await res.json();
+    renderDocs(docs);
+  } catch(e) {
+    document.getElementById("doc-list").innerHTML = '<div class="msg msg-err">Error loading documents.</div>';
+  }
+}
+
+function renderDocs(docs) {
+  if (docs.length === 0) {
+    document.getElementById("doc-list").innerHTML = '<div class="card" style="text-align:center;color:#A09C94">No documents uploaded yet.</div>';
+    return;
+  }
+  document.getElementById("doc-list").innerHTML = docs.map(d => `
+    <div class="card">
+      <div class="doc-row">
+        <div>
+          <div style="font-size:14px;font-weight:600">${esc(d.name)}</div>
+          <div class="meta mono">${(d.size/1024).toFixed(0)} KB · Uploaded ${new Date(d.uploaded).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}</div>
+        </div>
+        <button class="btn btn-sm btn-danger" onclick="deleteDoc('${d.id}')">Remove</button>
+      </div>
+      <div style="margin-top:10px">
+        <div class="mono" style="font-size:11px;color:#6D6A62;margin-bottom:5px">TAGS (click to toggle):</div>
+        <div>${TAG_LIST.map(t => `<span class="tag ${d.tags.includes(t.id)?'tag-on':'tag-off'}" onclick="toggleTag('${d.id}','${t.id}')">${t.label}</span>`).join("")}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function handleFiles(files) {
+  const msgEl = document.getElementById("upload-msg");
+  for (const file of files) {
+    msgEl.innerHTML = `<div class="msg msg-ok">Uploading ${esc(file.name)}…</div>`;
+    const form = new FormData();
+    form.append("file", file);
+    try {
+      const res = await fetch("/api/admin/upload", {
+        method: "POST", headers: {"x-admin-token": token}, body: form
+      });
+      if (!res.ok) { const e = await res.json(); msgEl.innerHTML = `<div class="msg msg-err">Error: ${e.error}</div>`; continue; }
+    } catch(e) {
+      msgEl.innerHTML = `<div class="msg msg-err">Upload failed: ${e.message}</div>`; continue;
+    }
+  }
+  msgEl.innerHTML = `<div class="msg msg-ok">${files.length} file(s) uploaded.</div>`;
+  setTimeout(() => msgEl.innerHTML = "", 3000);
+  loadDocs();
+}
+
+async function toggleTag(docId, tagId) {
+  const res = await fetch(`/api/admin/documents`, {headers:{"x-admin-token":token}});
+  const docs = await res.json();
+  const doc = docs.find(d => d.id === docId);
+  if (!doc) return;
+  const tags = doc.tags.includes(tagId) ? doc.tags.filter(t => t !== tagId) : [...doc.tags, tagId];
+  await fetch(`/api/admin/documents/${docId}/tags`, {
+    method:"PATCH", headers:{"Content-Type":"application/json","x-admin-token":token},
+    body: JSON.stringify({tags})
+  });
+  loadDocs();
+}
+
+async function deleteDoc(id) {
+  if (!confirm("Remove this document?")) return;
+  await fetch(`/api/admin/documents/${id}`, {method:"DELETE",headers:{"x-admin-token":token}});
+  loadDocs();
+}
+
+function esc(s) { const d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+</script>
+</body>
+</html>
